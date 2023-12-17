@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+
+
+
+<table>
+    <tr>
+        <th>예약 번호</th>
+        <th>회원 번호</th>
+        <th>예약 날짜</th>
+        <th>예약 시간</th>
+        <th>예약 인원 </th>
+        <th>총 가격</th>
+        <th>예약 상태</th>
+        <th>방 번호</th>
+    </tr>
+
+
+    <!-- thymeleaf 문법의 foreach문 이용-->
+    <tr th:each="reservation : ${reservations}">
+        <td th:text="${reservation.reservNo}"></td>
+        <td th:text="${reservation.code}"></td>
+        <td th:text="${#dates.format(reservation.reservDate, 'yyyy-MM-dd')}"></td>
+        <td th:text="${#temporals.format(reservation.reservTime, 'HH:mm')}"></td>
+        <td th:text="${reservation.reservPerson}"></td>
+        <td th:text="${reservation.reservTotalCost}"></td>
+        <td th:text="${reservation.reservStatus}"></td>
+        <td th:text="${reservation.roomNo}"></td>
+    </tr>
+</table>
+<button onclick="location.href='/'">인덱스</button>
+</body>
+</html>

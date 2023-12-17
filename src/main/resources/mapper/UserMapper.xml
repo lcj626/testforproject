@@ -1,0 +1,114 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "https://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.ohgiraffers.project.user.model.UserMapper">
+
+    <resultMap id="userResult" type="com.ohgiraffers.project.user.dto.UserDTO">
+        <id property="code" column="USER_NO"/>
+        <result property="email" column="USER_EMAIL"/>
+        <result property="password" column="USER_PASSWORD"/>
+        <result property="nickname" column="USER_NICKNAME"/>
+        <result property="phone" column="USER_PHONE"/>
+        <result property="sns" column="USER_SNS"/>
+        <result property="status" column="USER_STATUS"/>
+        <result property="auth" column="USER_AUTH"/>
+        <result property="registDate" column="USER_REGIST_DATE"/>
+        <result property="updateDate" column="USER_UPDATE_DATE"/>
+        <result property="imageNo" column="PROFILE_IMAGE_NO"/>
+        <result property="profileImageOriginalName" column="PROFILE_IMAGE_ORIGINAL_NAME"/>
+        <result property="profileImageChangedName" column="PROFILE_IMAGE_CHANGED_NAME"/>
+        <result property="profileImageExt" column="PROFILE_IMAGE_EXT"/>
+        <result property="profileImagePath" column="PROFILE_IMAGE_PATH"/>
+        <result property="profileImageRegistDate" column="PROFILE_IMAGE_REGIST_DATE"/>
+        <result property="profileImageUpdateDate" column="PROFILE_IMAGE_UPDATE_DATE"/>
+        <result property="profileImageStatus" column="PROFILE_IMAGE_STATUS"/>
+    </resultMap>
+
+    <select id="selectAllUsers" resultMap="userResult">
+    SELECT
+        U.*,
+        PI.PROFILE_IMAGE_ORIGINAL_NAME,
+        PI.PROFILE_IMAGE_CHANGED_NAME,
+        PI.PROFILE_IMAGE_EXT,
+        PI.PROFILE_IMAGE_PATH,
+        PI.PROFILE_IMAGE_REGIST_DATE,
+        PI.PROFILE_IMAGE_UPDATE_DATE,
+        PI.PROFILE_IMAGE_STATUS
+      FROM TBL_USER U
+        JOIN TBL_PROFILE_IMAGE PI ON U.PROFILE_IMAGE_NO = PI.PROFILE_IMAGE_NO;
+
+</select>
+
+    <select id="searchUser" resultMap="userResult">
+        SELECT
+        *
+        FROM
+        TBL_USER
+        WHERE
+        USER_NO = ${code}
+    </select>
+
+
+    <insert id="registUser" parameterType="com.ohgiraffers.project.user.dto.UserDTO">
+        INSERT INTO TBL_USER
+        (
+        USER_NO,
+        USER_EMAIL,
+        USER_PASSWORD,
+        USER_NICKNAME,
+        USER_PHONE,
+        USER_SNS,
+        USER_STATUS,
+        USER_AUTH,
+        USER_REGIST_DATE,
+        USER_UPDATE_DATE,
+        PROFILE_IMAGE_NO
+        )
+        VALUES(
+        #{code},
+        #{email},
+        #{password},
+        #{nickname},
+        #{phone},
+        #{sns},
+        #{status},
+        #{auth},
+        #{registDate},
+        #{updateDate},
+        #{imageNo}
+        )
+    </insert>
+
+    <update id="updatePassword">
+        UPDATE TBL_USER
+        SET USER_PASSWORD = #{newPassword}
+        WHERE USER_NO= #{code} AND USER_PASSWORD = #{currentPassword}
+    </update>
+
+    <update id="updateNickname">
+        UPDATE TBL_USER
+        SET USER_NICKNAME = #{nickname}
+        WHERE USER_NO= #{code}
+    </update>
+
+    <update id="updatePhone">
+        UPDATE TBL_USER
+        SET USER_PHONE = #{phone}
+        WHERE USER_NO= #{code}
+    </update>
+
+    <update id="updateProfileImage">
+        UPDATE TBL_USER
+        SET
+        PROFILE_IMAGE_NO = (
+        SELECT PROFILE_IMAGE_NO
+        FROM TBL_PROFILE_IMAGE
+        WHERE PROFILE_IMAGE_NO = #{imageNo}
+        )
+        WHERE USER_NO = #{code}
+    </update>
+
+
+
+</mapper>
